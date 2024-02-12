@@ -7,7 +7,12 @@ const Block = ({value, currency, onChangeValue, onChangeCurrency}) =>  (
       <ul className="currencies">
         {
             defaultCurrencies.map((cur)=>(
-                <li>{cur}</li>
+                <li 
+                  className={currency===cur ? 'active' : ''}
+                  onClick={()=>onChangeCurrency(cur)}
+                  >
+                  {cur}
+                </li>
             ))
         }
         <li>
@@ -19,7 +24,8 @@ const Block = ({value, currency, onChangeValue, onChangeCurrency}) =>  (
       </ul>
       <input 
         type="number" 
-        value={value}        
+        value={value}
+        onChange={(e)=>onChangeValue(e.target.value)}     
       />
     </div>
   )

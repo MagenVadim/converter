@@ -5,6 +5,10 @@ const url="https://exchange-rates.abstractapi.com/v1/live/?api_key=570d2f8900ca4
 
 function App() {
   const [fromCurrency, setFromCurrency] = useState("NIS");
+  const [toCurrency, setToCurrency] = useState("USD");
+
+  const [fromPrice, setFromPrice] = useState(0);
+  const [toPrice, setToPrice] = useState(0);
 
   const [rates, seRates] = useState({});
 
@@ -18,11 +22,19 @@ function App() {
     })
   })
   
+  const onChangeFromPrice = (value) =>{
+    setFromPrice(value)
+  }
+
+  const onChangeToPrice = (value) =>{
+    setToPrice(value)
+  }
+
 
   return (
     <div className="App">
-      <Block key={"b-01"} value={0} currency={fromCurrency} onChange={setFromCurrency}/>
-      <Block key={"b-02"} value={0} currency={'USD'}/>
+      <Block key={"b-01"} value={fromPrice} currency={fromCurrency} onChangeCurrency={setFromCurrency} onChangeValue={onChangeFromPrice}/>
+      <Block key={"b-02"} value={toPrice} currency={toCurrency} onChangeCurrency={setToCurrency} onChangeValue={onChangeToPrice}/>
     </div>
   );
 }
