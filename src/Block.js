@@ -1,13 +1,14 @@
 import React from 'react'
 
-const defaultCurrencies = ['NIS', 'USD', 'EUR', 'GBP'];
+const defaultCurrencies = ['ILS', 'USD', 'EUR', 'GBP'];
 
 const Block = ({value, currency, onChangeValue, onChangeCurrency}) =>  (
     <div className="block">
       <ul className="currencies">
         {
             defaultCurrencies.map((cur)=>(
-                <li 
+                <li
+                  key={cur}
                   className={currency===cur ? 'active' : ''}
                   onClick={()=>onChangeCurrency(cur)}
                   >

@@ -1,32 +1,41 @@
 import Block from "./Block";
 import { useState, useEffect } from "react";
 
-const url="https://exchange-rates.abstractapi.com/v1/live/?api_key=570d2f8900ca444ab35aeef24ce932e2&base=USD"
+
+const url="https://api.currencyfreaks.com/v2.0/rates/latest?apikey=3b4e1571709d4beca3e93361d006931c"
 
 function App() {
-  const [fromCurrency, setFromCurrency] = useState("NIS");
+  const [fromCurrency, setFromCurrency] = useState("ILS");
   const [toCurrency, setToCurrency] = useState("USD");
 
   const [fromPrice, setFromPrice] = useState(0);
   const [toPrice, setToPrice] = useState(0);
 
-  const [rates, seRates] = useState({});
+  const [rates, setRates] = useState({});
 
   useEffect (()=>{
     fetch(url)
     .then((res)=>res.json())
-    .then((json)=>seRates(json.exchange_rates))
+    .then((json)=>{
+      setRates(json.rates)
+    })
     .catch((err)=>{
       console.warn(err);
       alert("failed to get info")
     })
-  })
+  },[])
   
   const onChangeFromPrice = (value) =>{
-    setFromPrice(value)
+    const price = value / rates[fromCurrency];
+    const result = price * rates[toCurrency];
+    console.log(price)
+    setFromPrice(value);
+    setToPrice(result);
   }
 
   const onChangeToPrice = (value) =>{
+    const result = (rates[fromCurrency] / rates[toCurrency]) * value;
+    setFromPrice(result);
     setToPrice(value)
   }
 
