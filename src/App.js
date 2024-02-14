@@ -1,5 +1,5 @@
 import Block from "./Block";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 
 const url="https://api.currencyfreaks.com/v2.0/rates/latest?apikey=3b4e1571709d4beca3e93361d006931c"
@@ -9,15 +9,16 @@ function App() {
   const [toCurrency, setToCurrency] = useState("USD");
 
   const [fromPrice, setFromPrice] = useState(0);
-  const [toPrice, setToPrice] = useState(0);
+  const [toPrice, setToPrice] = useState(1);
 
-  const [rates, setRates] = useState({});
+  const ratesRef = useRef({})
 
   useEffect (()=>{
     fetch(url)
     .then((res)=>res.json())
     .then((json)=>{
-      setRates(json.rates)
+      ratesRef.current = json.rates;
+      onChangeToPrice(1)
     })
     .catch((err)=>{
       console.warn(err);
@@ -25,20 +26,29 @@ function App() {
     })
   },[])
   
+
+  useEffect(()=>{
+    onChangeFromPrice(fromPrice)
+  },[fromCurrency])
+
+  useEffect(()=>{
+    onChangeToPrice(toPrice)
+  }, [toCurrency])
+
+
   const onChangeFromPrice = (value) =>{
-    const price = value / rates[fromCurrency];
-    const result = price * rates[toCurrency];
+    const price = value / ratesRef.current[fromCurrency];
+    const result = price * ratesRef.current[toCurrency];
     console.log(price)
     setFromPrice(value);
-    setToPrice(result);
+    setToPrice(result.toFixed(3));
   }
 
   const onChangeToPrice = (value) =>{
-    const result = (rates[fromCurrency] / rates[toCurrency]) * value;
-    setFromPrice(result);
+    const result = (ratesRef.current[fromCurrency] / ratesRef.current[toCurrency]) * value;
+    setFromPrice(result.toFixed(3));
     setToPrice(value)
   }
-
 
   return (
     <div className="App">
